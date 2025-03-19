@@ -166,9 +166,9 @@ services:
     image: fonoster/webui:latest
     restart: unless-stopped
     environment:
-      - REACT_APP_API_URL=http://103.199.185.165:8449
+      - REACT_APP_API_URL=http://103.199.185.165:8282
     ports:
-      - 8080:80
+      - 8282:80
 
   adminer:
     image: adminer:latest
@@ -176,7 +176,7 @@ services:
     environment:
       ADMINER_DEFAULT_SERVER: postgres
     ports:
-      - 8282:8080
+      - 8383:8080
 
 volumes:
   db:
