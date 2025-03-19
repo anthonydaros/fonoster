@@ -2,14 +2,6 @@ services:
   apiserver:
     image: fonoster/apiserver:latest
     restart: unless-stopped
-    command: >
-      sh -c "
-      mkdir -p /opt/fonoster/keys &&
-      cp -f /keys/* /opt/fonoster/keys/ &&
-      chmod 644 /opt/fonoster/keys/*.pem &&
-      ls -la /opt/fonoster/keys &&
-      exec dockerize -wait tcp://postgres:5432 -timeout 60s docker-entrypoint.sh
-      "
     environment:
       - APISERVER_APP_URL
       - APISERVER_ASTERISK_ARI_PROXY_URL
@@ -53,7 +45,7 @@ services:
     ports:
       - 50051:50051
     volumes:
-      - ./config/keys:/keys
+      - ./config/keys:/opt/fonoster/keys
       - ./config/integrations.json:/opt/fonoster/integrations.json:ro
 
   autopilot:
