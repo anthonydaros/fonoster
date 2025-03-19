@@ -1,7 +1,30 @@
 services:
+  # Serviço de inicialização para gerar as chaves criptográficas
+  init-keys:
+    image: alpine:latest
+    command: >
+      sh -c "
+        mkdir -p /keys &&
+        if [ ! -f /keys/private.pem ]; then
+          apk add --no-cache openssl &&
+          openssl genrsa -out /keys/private.pem 2048 &&
+          openssl rsa -in /keys/private.pem -pubout -out /keys/public.pem &&
+          chmod 600 /keys/private.pem &&
+          chmod 644 /keys/public.pem
+        else
+          echo 'Chaves já existem, pulando geração'
+        fi
+      "
+    volumes:
+      - ./config/keys:/keys
+
   apiserver:
     image: fonoster/apiserver:latest
     restart: unless-stopped
+    depends_on:
+      - init-keys
+      - postgres
+      - nats
     environment:
       - APISERVER_APP_URL
       - APISERVER_ASTERISK_ARI_PROXY_URL
