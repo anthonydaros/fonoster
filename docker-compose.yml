@@ -162,6 +162,14 @@ services:
       - 8449:8449
       # - 443:443  # Comentando esta linha para evitar conflito de porta
 
+  webui:
+    image: fonoster/webui:latest
+    restart: unless-stopped
+    environment:
+      - REACT_APP_API_URL=http://103.199.185.165:8449
+    ports:
+      - 8080:80
+
   adminer:
     image: adminer:latest
     restart: unless-stopped
