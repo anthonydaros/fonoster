@@ -160,8 +160,8 @@ services:
       - ./config/envoy.yaml:/etc/envoy/envoy.yaml:ro
     ports:
       - 8449:8449
-      - 443:443
-      
+      # - 443:443  # Comentando esta linha para evitar conflito de porta
+
   adminer:
     image: adminer:latest
     restart: unless-stopped
