@@ -1,7 +1,17 @@
 services:
+  # Contêiner de inicialização para gerar as chaves
+  init:
+    build:
+      context: .
+      dockerfile: Dockerfile.init
+    volumes:
+      - fonoster-keys:/keys
+    
   apiserver:
     image: fonoster/apiserver:latest
     restart: unless-stopped
+    depends_on:
+      - init
     environment:
       - APISERVER_APP_URL
       - APISERVER_ASTERISK_ARI_PROXY_URL
@@ -45,7 +55,7 @@ services:
     ports:
       - 50051:50051
     volumes:
-      - ./config/keys:/opt/fonoster/keys
+      - fonoster-keys:/opt/fonoster/keys
       - ./config/integrations.json:/opt/fonoster/integrations.json:ro
 
   autopilot:
@@ -180,4 +190,5 @@ services:
 
 volumes:
   db:
-  influxdb: 
+  influxdb:
+  fonoster-keys:  # Volume dedicado para armazenar as chaves 

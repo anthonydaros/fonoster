@@ -1,0 +1,17 @@
+FROM alpine:latest
+
+RUN apk add --no-cache openssl
+
+WORKDIR /keys
+
+# Script para gerar as chaves
+RUN echo '#!/bin/sh' > /generate-keys.sh && \
+    echo 'mkdir -p /keys' >> /generate-keys.sh && \
+    echo 'openssl genrsa -out /keys/private.pem 2048' >> /generate-keys.sh && \
+    echo 'openssl rsa -in /keys/private.pem -pubout -out /keys/public.pem' >> /generate-keys.sh && \
+    echo 'chmod 644 /keys/*.pem' >> /generate-keys.sh && \
+    echo 'echo "Keys generated successfully:"' >> /generate-keys.sh && \
+    echo 'ls -la /keys' >> /generate-keys.sh && \
+    chmod +x /generate-keys.sh
+
+ENTRYPOINT ["/generate-keys.sh"] 
